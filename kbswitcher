@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+detach_keyboard() {
+	device=$(xinput --list | grep "AT Translated Set 2 keyboard" | grep -oP 'id=\K\d+')
+	xinput set-prop $device "Device Enabled" 0 >/dev/null 2>&1
+}
+
+reattach_keyboard() {
+	device=$(xinput --list | grep "AT Translated Set 2 keyboard" | grep -oP 'id=\K\d+')
+	xinput set-prop $device "Device Enabled" 1 >/dev/null 2>&1
+}
+
+prompt() {
+	length=""
+	echo "How long do you want to detach the internal keyboard for? Insert a value in multiples of 2. (Defaults to 2048 seconds / 34 minutes)"
+	read length
+
+	if ((length % 2 == 0)); then
+		detach_keyboard
+		sleep $length
+		reattach_keyboard
+	else
+		echo "Please enter a value in multiples of 2."
+		prompt
+	fi
+}
+printhelp() {
+	echo "--help   , -h : Print this output and exit"
+	echo "--attach , -a : attach internal keyboard"
+	echo "--detach , -d : dettach internal keyboard"
+	echo "--detach , -t : dettach internal keyboard for a specified time (in seconds and in multiples of 2)"
+	exit
+}
+
+case "$1" in
+"-a")
+	reattach_keyboard
+	;;
+"-d")
+	detach_keyboard
+	;;
+"-t")
+	prompt
+	;;
+*)
+	printhelp
+	;;
+esac
