@@ -1,0 +1,14 @@
+[Effect-blur]
+BlurStrength=4
+NoiseStrength=2
+
+[NightColor]
+Active=true
+DayTemperature=5000
+LatitudeAuto=24.8741
+LongitudeAuto=67.1906
+Mode=Constant
+NightTemperature=3700
+
+[Windows]
+BorderlessMaximizedWindows=true
