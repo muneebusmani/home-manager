@@ -11,10 +11,9 @@
     docker-compose
     github-desktop
     go
-    php
     nodejs-18_x
     tmux
-    php83Packages.composer
+    #php83Packages.composer
     tmuxPlugins.catppuccin
     tmuxPlugins.yank
     tmuxPlugins.vim-tmux-navigator
@@ -23,9 +22,11 @@
     neovim
     vim
     kitty
-    vscode-fhs
+    vscode
     jetbrains.rider
     mono
+    libreoffice
+
 
     # Build tools
     gh
@@ -51,7 +52,7 @@
         enable_audio_bell = false;
         confirm_os_window_close = 0;
         window_padding_width = 5;
-        background_opacity = "0.75";
+        background_opacity = "1";
         background_blur = 1;
       };
       theme = "Catppuccin-Mocha";
@@ -113,7 +114,7 @@
         setopt notify
         setopt extendedglob
         unsetopt beep
-        neofetch
+        ~/.config/home-manager/neofetch
       '';
       shellAliases = {
         update-sys = "sudo nixos-rebuild switch";
@@ -187,6 +188,7 @@
           "dotnet"
           "tmux"
           "vi-mode"
+          "dotnet"
         ];
       };
     };
@@ -195,4 +197,35 @@
   home.username = "muneeb";
   home.stateVersion = "23.11";
   home.homeDirectory = "/home/muneeb";
+  home.file.ideavimrc = {
+    text = ''
+      set clipboard+=unnamedplus
+      nnoremap d "_d
+      vnoremap d "_d
+      nnoremap D "_D
+      vnoremap D "_D
+      nnoremap c "_c
+      vnoremap c "_c
+      nnoremap C "_C
+      vnoremap C "_C
+    '';
+    enable = true;
+    target = ".ideavimrc";
+  };
+  home.file.kbswitcher = {
+    source = ./kbswitcher;
+    target = ".kbswitcher";
+    enable = true;
+  };
+  home.file.neofetch = {
+    source = ./neofetch;
+    target = ".neofetch";
+    enable = true;
+  };
+
+  home.file.nvidia-offload = {
+    source = ./nvidia-offload;
+    target = ".nvidia-offload";
+    enable = true;
+  };
 }
