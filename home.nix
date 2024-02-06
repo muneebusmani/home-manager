@@ -46,13 +46,13 @@
       shellIntegration.enableFishIntegration = true;
       font.name = "ComicShannsMono Nerd Font";
       font.package = pkgs.nerdfonts;
-      font.size = 16;
+      font.size = 24;
       settings = {
         scrollback_lines = 10000;
         enable_audio_bell = false;
         confirm_os_window_close = 0;
         window_padding_width = 5;
-        background_opacity = "1";
+        background_opacity = "0.75";
         background_blur = 1;
       };
       theme = "Catppuccin-Mocha";
@@ -157,6 +157,7 @@
         "....." = "cd ...../";
         "......" = "cd ....../";
         ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
+	lazyvim = "NVIM_APPNAME=lazyvim nvim"
       };
       enableAutosuggestions = true;
       sessionVariables = {
