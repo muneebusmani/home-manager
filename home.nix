@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+ unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+in
 {
 
   home.packages = with pkgs ; [
@@ -13,6 +16,7 @@
     go
     nodejs-18_x
     tmux
+    sqlcmd
     #php83Packages.composer
     tmuxPlugins.catppuccin
     tmuxPlugins.yank
@@ -23,10 +27,9 @@
     vim
     kitty
     vscode
-    jetbrains.rider
+    unstable.jetbrains.rider
     mono
     libreoffice
-
 
     # Build tools
     gh
@@ -44,9 +47,9 @@
       shellIntegration.enableZshIntegration = true;
       shellIntegration.enableBashIntegration = true;
       shellIntegration.enableFishIntegration = true;
-      font.name = "ComicShannsMono Nerd Font";
+      font.name = "JetBrainsMono Nerd Font";
       font.package = pkgs.nerdfonts;
-      font.size = 24;
+      font.size = 16;
       settings = {
         scrollback_lines = 10000;
         enable_audio_bell = false;
@@ -157,7 +160,7 @@
         "....." = "cd ...../";
         "......" = "cd ....../";
         ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
-	lazyvim = "NVIM_APPNAME=lazyvim nvim"
+	lazyvim = "NVIM_APPNAME=lazyvim nvim";
       };
       enableAutosuggestions = true;
       sessionVariables = {
@@ -221,6 +224,12 @@
   home.file.neofetch = {
     source = ./neofetch;
     target = ".neofetch";
+    enable = true;
+  };
+
+  home.file.neofetch-config = {
+    source = ./neofetch.conf;
+    target = ".config/neofetch/config.conf";
     enable = true;
   };
 

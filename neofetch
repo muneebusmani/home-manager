@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 if [[ $TERMINAL_EMULATOR != "JetBrains-JediTerm" ]]; then
-	/run/current-system/sw/bin/neofetch
+	/run/current-system/sw/bin/neofetch --ascii
 fi
