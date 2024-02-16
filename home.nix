@@ -1,45 +1,51 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
- unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
 in
 {
-
-  home.packages = with pkgs ; [
-    # coding
-    dotnet-sdk_8
-    android-studio
-    stylua
-    dart
-    docker
-    docker-compose
-    github-desktop
-    go
-    nodejs-18_x
-    tmux
-    sqlcmd
-    #php83Packages.composer
-    tmuxPlugins.catppuccin
-    tmuxPlugins.yank
-    tmuxPlugins.vim-tmux-navigator
-    tmuxPlugins.resurrect
-    tmuxPlugins.continuum
-    neovim
-    vim
-    kitty
-    vscode
+  home.packages = with pkgs; [
+    unstable.dotnet-sdk_8
+    unstable.stylua
+    unstable.dart
+    unstable.docker
+    unstable.docker-compose
+    unstable.lazydocker
+    unstable.github-desktop
+    unstable.go
+    unstable.nodejs_20
+    unstable.tmux
+    unstable.sqlcmd
+    unstable.node2nix
+    unstable.tmuxPlugins.catppuccin
+    unstable.tmuxPlugins.yank
+    unstable.tmuxPlugins.vim-tmux-navigator
+    unstable.tmuxPlugins.resurrect
+    unstable.tmuxPlugins.continuum
+    unstable.neovim
+    unstable.vim
+    unstable.kitty
+    unstable.vscode.fhs
     unstable.jetbrains.rider
-    mono
-    libreoffice
-
-    # Build tools
-    gh
-    python3
-    ruby
-    rustc
-    cargo
-    luarocks
+    unstable.jetbrains.webstorm
+    unstable.jetbrains.phpstorm
+    unstable.gh
+    unstable.python3
+    unstable.ruby
+    unstable.rustc
+    unstable.cargo
+    unstable.luarocks
+    unstable.mono
+    unstable.android-studio
+    unstable.libreoffice
   ];
   programs = {
+    git = {
+      enable = true;
+      lfs.enable = true;
+      userName = "Muneeb Usmani";
+      userEmail = "muneebusmani8355@gmail.com";
+      delta.enable = true;
+    };
     home-manager.enable = true;
     kitty = {
       enable = true;
@@ -49,7 +55,7 @@ in
       shellIntegration.enableFishIntegration = true;
       font.name = "JetBrainsMono Nerd Font";
       font.package = pkgs.nerdfonts;
-      font.size = 16;
+      font.size = 14;
       settings = {
         scrollback_lines = 10000;
         enable_audio_bell = false;
@@ -117,9 +123,10 @@ in
         setopt notify
         setopt extendedglob
         unsetopt beep
-        ~/.config/home-manager/neofetch
+        #~/.config/home-manager/neofetch
       '';
       shellAliases = {
+        "c." = "code .";
         update-sys = "sudo nixos-rebuild switch";
         update-home = "home-manager switch";
         op = "nvim ~/.config/home-manager/home.nix";
@@ -160,7 +167,7 @@ in
         "....." = "cd ...../";
         "......" = "cd ....../";
         ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
-	lazyvim = "NVIM_APPNAME=lazyvim nvim";
+        lazyvim = "NVIM_APPNAME=lazyvim nvim";
       };
       enableAutosuggestions = true;
       sessionVariables = {
