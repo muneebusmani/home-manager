@@ -4,39 +4,41 @@ let
 in
 {
   home.packages = with pkgs; [
-    unstable.dotnet-sdk_8
-    unstable.stylua
-    unstable.dart
-    unstable.docker
-    unstable.docker-compose
-    unstable.lazydocker
-    unstable.github-desktop
-    unstable.go
-    unstable.nodejs_20
-    unstable.tmux
-    unstable.sqlcmd
-    unstable.node2nix
-    unstable.tmuxPlugins.catppuccin
-    unstable.tmuxPlugins.yank
-    unstable.tmuxPlugins.vim-tmux-navigator
-    unstable.tmuxPlugins.resurrect
-    unstable.tmuxPlugins.continuum
-    unstable.neovim
-    unstable.vim
-    unstable.kitty
     unstable.vscode.fhs
     unstable.jetbrains.rider
     unstable.jetbrains.webstorm
     unstable.jetbrains.phpstorm
-    unstable.gh
+    unstable.android-studio
+    unstable.neovim
+    unstable.vim
+
+    unstable.dotnet-sdk_8
+    unstable.nodejs_20
+    unstable.luarocks
     unstable.python3
-    unstable.ruby
+    unstable.stylua
     unstable.rustc
     unstable.cargo
-    unstable.luarocks
+    unstable.ruby
     unstable.mono
-    unstable.android-studio
-    unstable.libreoffice
+    unstable.dart
+    unstable.go
+    #unstable.sqlcmd
+    #unstable.node2nix
+
+    tmuxPlugins.vim-tmux-navigator
+    tmuxPlugins.catppuccin
+    tmuxPlugins.resurrect
+    tmuxPlugins.continuum
+    tmuxPlugins.yank
+    docker-compose
+    github-desktop
+    libreoffice
+    lazydocker
+    docker
+    kitty
+    tmux
+    gh
   ];
   programs = {
     git = {
