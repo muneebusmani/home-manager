@@ -203,7 +203,7 @@ in
    };
    nixpkgs.config.allowUnfree = true;
    home.username = "muneeb";
-   home.stateVersion = "23.11";
+   home.stateVersion = "24.05";
    home.homeDirectory = "/home/muneeb";
    home.file.ideavimrc = {
      text = ''
