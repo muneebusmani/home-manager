@@ -165,7 +165,8 @@ in
          ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
          lazyvim = "NVIM_APPNAME=lazyvim nvim";
        };
-       enableAutosuggestions = true;
+       autosuggestion.enable = true;
+       #enableAutosuggestions = true;
        sessionVariables = {
          #DOTNET_ROOT = "$(dirname $(which dotnet))";
          PATH = "$PATH:/home/muneeb/.dotnet/tools";
