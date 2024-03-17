@@ -1,250 +1,245 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 let
-  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
 in
 {
-  home.packages = with pkgs; [
-    unstable.vscode.fhs
-    unstable.jetbrains.rider
-    unstable.jetbrains.webstorm
-    unstable.jetbrains.phpstorm
-    unstable.android-studio
-    unstable.neovim
-    unstable.vim
-
-    unstable.dotnet-sdk_8
-    unstable.nodejs_20
-    unstable.luarocks
-    unstable.python3
-    unstable.stylua
-    unstable.rustc
-    unstable.cargo
-    unstable.ruby
-    unstable.mono
-    unstable.dart
-    unstable.go
-    #unstable.sqlcmd
-    #unstable.node2nix
-
-    tmuxPlugins.vim-tmux-navigator
-    tmuxPlugins.catppuccin
-    tmuxPlugins.resurrect
-    tmuxPlugins.continuum
-    tmuxPlugins.yank
-    docker-compose
-    github-desktop
-    libreoffice
-    lazydocker
-    docker
-    kitty
-    tmux
-    gh
+  imports = [
+    (import "${home-manager}/nixos")
   ];
-  programs = {
-    git = {
-      enable = true;
-      lfs.enable = true;
-      userName = "Muneeb Usmani";
-      userEmail = "muneebusmani8355@gmail.com";
-      delta.enable = true;
-    };
-    home-manager.enable = true;
-    kitty = {
-      enable = true;
-      shellIntegration.mode = "enabled";
-      shellIntegration.enableZshIntegration = true;
-      shellIntegration.enableBashIntegration = true;
-      shellIntegration.enableFishIntegration = true;
-      font.name = "JetBrainsMono Nerd Font";
-      font.package = pkgs.nerdfonts;
-      font.size = 14;
-      settings = {
-        scrollback_lines = 10000;
-        enable_audio_bell = false;
-        confirm_os_window_close = 0;
-        window_padding_width = 5;
-        background_opacity = "0.75";
-        background_blur = 1;
-      };
-      theme = "Catppuccin-Mocha";
-    };
-    starship = {
-      enable = false;
-      settings = {
-        add_newline = true;
-        character = {
-          success_symbol = "[➜](bold green)";
-          error_symbol = "[➜](bold red)";
-        };
-      };
-    };
-    tmux = {
-      enable = true;
-      plugins = with pkgs; [
-        tmuxPlugins.catppuccin
-        tmuxPlugins.yank
-        tmuxPlugins.vim-tmux-navigator
-        tmuxPlugins.resurrect
-        tmuxPlugins.continuum
-      ];
-      keyMode = "vi";
-      baseIndex = 1;
-      shortcut = "space";
-      mouse = true;
-      newSession = true;
-      escapeTime = 10;
-      customPaneNavigationAndResize = true;
-      terminal = "tmux-256color";
-      extraConfig = ''
-        set-option -sa terminal-features "xterm-kitty:RGB"
-        set-option -g focus-events on
-        set -g mouse on
-        set-option -g history-limit 10000
-        set -g renumber-windows on
-        bind \` switch-client -t'{marked}'
-        bind-key "|" split-window -h -c "#{pane_current_path}"
-        bind-key "-" split-window -v -c "#{pane_current_path}"
-        bind-key "\\" split-window -fh -c "#{pane_current_path}"
-        bind-key "_" split-window -fv -c "#{pane_current_path}"
-        bind -r "<" swap-window -d -t -1
-        bind -r ">" swap-window -d -t +1
-        bind -n M-n new-window -c "#{pane_current_path}"
-        bind -n M-q killp
-        bind Space last-window
-        bind-key C-Space switch-client -l
-        set -g @yank_selection primary # or 'secondary' or 'clipboard'
-        set -g @continuum-restore 'on'
-      '';
-    };
-    zsh = {
-      package = pkgs.zsh;
-      enable = true;
-      autocd = true;
-      initExtra = ''
-        setopt nomatch
-        setopt notify
-        setopt extendedglob
-        unsetopt beep
-        #~/.config/home-manager/neofetch
-      '';
-      shellAliases = {
-        "c." = "code .";
-        update-sys = "sudo nixos-rebuild switch";
-        update-home = "home-manager switch";
-        op = "nvim ~/.config/home-manager/home.nix";
-        dg = "dotnet aspnet-codegenerator";
-        cls = "clear";
-        q = "exit";
-        tarnow = "tar - acf ";
-        untar = "tar - zxvf ";
-        wget = "wget - c ";
-        dir = "dir - -color=auto";
-        vdir = "vdir - -color=auto";
-        hw = "hwinfo - -short"; # Hardware Info
-        ip = "ip - color";
-        please = "sudo";
-        jctl = "journalctl -p 3 -xb";
-        ngc = "ng g c";
-        open = "xdg-open";
-        ngs = "ng serve";
-        ndir = "cd ~/.config/nvim/";
-        cdir = "cd ~/coding/";
-        edge = "microsoft-edge-stable";
-        ts = "tmux";
-        tad = "tmux attach";
-        sc-restart = "sudo systemctl restart";
-        sc-stop = "sudo systemctl stop";
-        sc-start = "sudo systemctl start";
-        sc-status = "sudo systemctl status";
-        sc-hiber = "sudo systemctl hibernate";
-        sc-sleep = "sudo systemctl hybrid-sleep";
-        sc-poff = "sudo systemctl poweroff";
-        sc-rbt = "sudo systemctl reboot";
-        sc-srbt = "sudo systemctl soft-reboot";
-        sc-spd = "sudo systemctl suspend";
-        sc-shiber = "sudo systemctl suspend-then-hibernate";
-        ".." = "cd ../";
-        "..." = "cd .../";
-        "...." = "cd ..../";
-        "....." = "cd ...../";
-        "......" = "cd ....../";
-        ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
-        lazyvim = "NVIM_APPNAME=lazyvim nvim";
-      };
-      enableAutosuggestions = true;
-      sessionVariables = {
-        #DOTNET_ROOT = "$(dirname $(which dotnet))";
-        PATH = "$PATH:/home/muneeb/.dotnet/tools";
-        ZSH_TMUX_AUTOSTART = true;
-        ZSH_TMUX_AUTOQUIT = false;
-        VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
-        VI_MODE_SET_CURSOR = true;
-        VISUAL = "nvim";
-        EDITOR = "nvim";
-        SUDO_EDITOR = "nvim";
-      };
-      syntaxHighlighting = {
-        enable = true;
-        package = pkgs.zsh-syntax-highlighting;
-      };
-      oh-my-zsh = {
-        enable = true;
-        package = pkgs.oh-my-zsh;
-        theme = "gozilla";
-        plugins = [
-          "git"
-          "node"
-          "npm"
-          "ng"
-          "web-search"
-          "aliases"
-          "dotnet"
-          "tmux"
-          "vi-mode"
-          "dotnet"
-        ];
-      };
-    };
-  };
-  nixpkgs.config.allowUnfree = true;
-  home.username = "muneeb";
-  home.stateVersion = "23.11";
-  home.homeDirectory = "/home/muneeb";
-  home.file.ideavimrc = {
-    text = ''
-      set clipboard+=unnamedplus
-      nnoremap d "_d
-      vnoremap d "_d
-      nnoremap D "_D
-      vnoremap D "_D
-      nnoremap c "_c
-      vnoremap c "_c
-      nnoremap C "_C
-      vnoremap C "_C
-    '';
-    enable = true;
-    target = ".ideavimrc";
-  };
-  home.file.kbswitcher = {
-    source = ./kbswitcher;
-    target = ".kbswitcher";
-    enable = true;
-  };
-  home.file.neofetch = {
-    source = ./neofetch;
-    target = ".neofetch";
-    enable = true;
-  };
-
-  home.file.neofetch-config = {
-    source = ./neofetch.conf;
-    target = ".config/neofetch/config.conf";
-    enable = true;
-  };
-
-  home.file.nvidia-offload = {
-    source = ./nvidia-offload;
-    target = ".nvidia-offload";
-    enable = true;
+  home-manager.users.muneeb = {
+    home.packages = with pkgs; [
+      vscode.fhs
+      jetbrains.webstorm
+      neovim
+      dotnet-sdk_8
+      nodejs_20
+      corepack_20
+      bun
+      luarocks
+      python3
+      stylua
+      rustc
+      cargo
+      ruby
+      mono
+      dart
+      #flutter
+      go
+      sass
+      scss-lint 
+      libreoffice
+      kitty
+      tmux
+      gh
+      jetbrains.rider
+      jetbrains.phpstorm
+      #android-studio
+      vim
+   ];
+   programs = {
+     git = {
+       enable = true;
+       lfs.enable = true;
+       userName = "Muneeb Usmani";
+       userEmail = "muneebusmani8355@gmail.com";
+       delta.enable = true;
+     };
+     home-manager.enable = true;
+     kitty = {
+       enable = true;
+       shellIntegration.mode = "enabled";
+       shellIntegration.enableZshIntegration = true;
+       shellIntegration.enableBashIntegration = true;
+       shellIntegration.enableFishIntegration = true;
+       font.name = "JetBrainsMono Nerd Font";
+       font.package = pkgs.nerdfonts;
+       font.size = 14;
+       settings = {
+         scrollback_lines = 10000;
+         enable_audio_bell = false;
+         confirm_os_window_close = 0;
+         window_padding_width = 5;
+       };
+       theme = "Catppuccin-Mocha";
+     };
+     starship = {
+       enable = false;
+       settings = {
+         add_newline = true;
+         character = {
+           success_symbol = "[➜](bold green)";
+           error_symbol = "[➜](bold red)";
+         };
+       };
+     };
+     tmux = {
+       enable = true;
+       plugins = with pkgs; [
+         tmuxPlugins.catppuccin
+         tmuxPlugins.yank
+         tmuxPlugins.vim-tmux-navigator
+         tmuxPlugins.resurrect
+         tmuxPlugins.continuum
+       ];
+       keyMode = "vi";
+       baseIndex = 1;
+       shortcut = "space";
+       mouse = true;
+       newSession = true;
+       escapeTime = 10;
+       customPaneNavigationAndResize = true;
+       terminal = "tmux-256color";
+       extraConfig = ''
+         set-option -sa terminal-features "xterm-kitty:RGB"
+         set-option -g focus-events on
+         set -g mouse on
+         set-option -g history-limit 10000
+         set -g renumber-windows on
+         bind \` switch-client -t'{marked}'
+         bind-key "|" split-window -h -c "#{pane_current_path}"
+         bind-key "-" split-window -v -c "#{pane_current_path}"
+         bind-key "\\" split-window -fh -c "#{pane_current_path}"
+         bind-key "_" split-window -fv -c "#{pane_current_path}"
+         bind -r "<" swap-window -d -t -1
+         bind -r ">" swap-window -d -t +1
+         bind -n M-n new-window -c "#{pane_current_path}"
+         bind -n M-q killp
+         bind Space last-window
+         bind-key C-Space switch-client -l
+         set -g @yank_selection primary # or 'secondary' or 'clipboard'
+         set -g @continuum-restore 'on'
+       '';
+     };
+     zsh = {
+       package = pkgs.zsh;
+       enable = true;
+       autocd = true;
+       initExtra = ''
+         setopt nomatch
+         setopt notify
+         setopt extendedglob
+         unsetopt beep
+         #~/.config/home-manager/neofetch
+       '';
+       shellAliases = {
+         "c." = "code .";
+         update-sys = "sudo nixos-rebuild switch";
+         update-home = "home-manager switch";
+         op = "nvim ~/.config/home-manager/home.nix";
+         dg = "dotnet aspnet-codegenerator";
+         cls = "clear";
+         q = "exit";
+         tarnow = "tar - acf ";
+         untar = "tar - zxvf ";
+         wget = "wget - c ";
+         dir = "dir - -color=auto";
+         vdir = "vdir - -color=auto";
+         hw = "hwinfo - -short"; # Hardware Info
+         ip = "ip - color";
+         please = "sudo";
+         jctl = "journalctl -p 3 -xb";
+         ngc = "ng g c";
+         open = "xdg-open";
+         ngs = "ng serve";
+         ndir = "cd ~/.config/nvim/";
+         cdir = "cd ~/coding/";
+         edge = "microsoft-edge-stable";
+         ts = "tmux";
+         tad = "tmux attach";
+         sc-restart = "sudo systemctl restart";
+         sc-stop = "sudo systemctl stop";
+         sc-start = "sudo systemctl start";
+         sc-status = "sudo systemctl status";
+         sc-hiber = "sudo systemctl hibernate";
+         sc-sleep = "sudo systemctl hybrid-sleep";
+         sc-poff = "sudo systemctl poweroff";
+         sc-rbt = "sudo systemctl reboot";
+         sc-srbt = "sudo systemctl soft-reboot";
+         sc-spd = "sudo systemctl suspend";
+         sc-shiber = "sudo systemctl suspend-then-hibernate";
+         ".." = "cd ../";
+         "..." = "cd .../";
+         "...." = "cd ..../";
+         "....." = "cd ...../";
+         "......" = "cd ....../";
+         ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
+         lazyvim = "NVIM_APPNAME=lazyvim nvim";
+       };
+       enableAutosuggestions = true;
+       sessionVariables = {
+         #DOTNET_ROOT = "$(dirname $(which dotnet))";
+         PATH = "$PATH:/home/muneeb/.dotnet/tools";
+         ZSH_TMUX_AUTOSTART = true;
+         ZSH_TMUX_AUTOQUIT = false;
+         VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
+         VI_MODE_SET_CURSOR = true;
+         VISUAL = "nvim";
+         EDITOR = "nvim";
+         SUDO_EDITOR = "nvim";
+       };
+       syntaxHighlighting = {
+         enable = true;
+         package = pkgs.zsh-syntax-highlighting;
+       };
+       oh-my-zsh = {
+         enable = true;
+         package = pkgs.oh-my-zsh;
+         theme = "gozilla";
+         plugins = [
+           "git"
+           "node"
+           "npm"
+           "ng"
+           "web-search"
+           "aliases"
+           "dotnet"
+           "tmux"
+           "vi-mode"
+           "dotnet"
+         ];
+       };
+     };
+   };
+   nixpkgs.config.allowUnfree = true;
+   home.username = "muneeb";
+   home.stateVersion = "23.11";
+   home.homeDirectory = "/home/muneeb";
+   home.file.ideavimrc = {
+     text = ''
+       set clipboard+=unnamedplus
+       nnoremap d "_d
+       vnoremap d "_d
+       nnoremap D "_D
+       vnoremap D "_D
+       nnoremap c "_c
+       vnoremap c "_c
+       nnoremap C "_C
+       vnoremap C "_C
+     '';
+     enable = true;
+     target = ".ideavimrc";
+   };
+   home.file.kbswitcher = {
+     source = ./kbswitcher;
+     target = ".kbswitcher";
+     enable = true;
+   };
+   home.file.neofetch = {
+     source = ./neofetch;
+     target = ".neofetch";
+     enable = true;
+   };
+  
+   home.file.neofetch-config = {
+     source = ./neofetch.conf;
+     target = ".config/neofetch/config.conf";
+     enable = true;
+   };
+  
+   home.file.nvidia-offload = {
+     source = ./nvidia-offload;
+     target = ".nvidia-offload";
+     enable = true;
+   };
   };
 }
