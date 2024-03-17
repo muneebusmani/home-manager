@@ -162,7 +162,7 @@ in
          "...." = "cd ..../";
          "....." = "cd ...../";
          "......" = "cd ....../";
-         ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed";
+         ls = "exa -@lagbh --no-git --no-permissions --no-filesize --no-user  --changed --sort=type";
          lazyvim = "NVIM_APPNAME=lazyvim nvim";
        };
        autosuggestion.enable = true;
